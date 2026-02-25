@@ -1,4 +1,4 @@
-import img from "../assets/background.jpg";
+import MyImage from "../assets/MyImage.png";
 import AboutSection from "./About";
 import Careers from "./CareerSection";
 import Contact from "./ContactSection";
@@ -53,13 +53,12 @@ const HomepageSection = (props: any) => {
         }
 
         .profile-image {
-          height: 300px;
+          height: 500px;
           width: 500px;
           object-fit: cover;
           border-radius: 12px;
         }
 
-        /* 🔥 Skills Section */
         .skills-wrapper {
           margin-left: 20px;
           margin-top: 25px;
@@ -170,7 +169,7 @@ const HomepageSection = (props: any) => {
             <div className="skills-group">
               {renderSkills(
                 otherSkills,
-                frontendSkills.length + backendSkills.length
+                frontendSkills.length + backendSkills.length,
               )}
             </div>
           </div>
@@ -190,7 +189,7 @@ const HomepageSection = (props: any) => {
         </div>
 
         <div className="image-container">
-          <img src={img} alt="profile" className="profile-image" />
+          <img src={MyImage} alt="profile" className="profile-image" />
         </div>
       </div>
 
