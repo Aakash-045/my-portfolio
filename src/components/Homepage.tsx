@@ -17,7 +17,7 @@ const Homepage = () => {
 
   const handleDownloadCV = () => {
     const link = document.createElement("a");
-    link.href = "/Aakash_Resume.pdf";
+    link.href = `${import.meta.env.BASE_URL}Aakash_Resume.pdf`;
     link.download = "Aakash_Resume.pdf";
     document.body.appendChild(link);
     link.click();
