@@ -3,14 +3,21 @@ import { projectsData } from "../constant";
 
 const Projects = () => {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [direction, setDirection] = useState<"left" | "right">("right");
   const total = projectsData.length;
 
   const handleNext = () => {
-    setActiveIndex((prev) => (prev < total - 1 ? prev + 1 : prev));
+    if (activeIndex < total - 1) {
+      setDirection("right");
+      setActiveIndex((prev) => prev + 1);
+    }
   };
 
   const handlePrev = () => {
-    setActiveIndex((prev) => (prev > 0 ? prev - 1 : prev));
+    if (activeIndex > 0) {
+      setDirection("left");
+      setActiveIndex((prev) => prev - 1);
+    }
   };
 
   const project = projectsData[activeIndex];
@@ -40,22 +47,6 @@ const Projects = () => {
             margin-bottom: 20px;
           }
 
-          /* 🔥 Transition */
-          .card-transition {
-            animation: fadeSlide 0.4s ease-in-out;
-          }
-
-          @keyframes fadeSlide {
-            from {
-              opacity: 0;
-              transform: translateX(20px);
-            }
-            to {
-              opacity: 1;
-              transform: translateX(0);
-            }
-          }
-
           .about-list {
             color: #ffffff;
             font-size: 18px;
@@ -68,25 +59,53 @@ const Projects = () => {
             padding-left: 20px;
           }
 
-          .nav-buttons {
+          @keyframes slideInFromRight {
+            from { opacity: 0; transform: translateX(60px); }
+            to   { opacity: 1; transform: translateX(0); }
+          }
+
+          @keyframes slideInFromLeft {
+            from { opacity: 0; transform: translateX(-60px); }
+            to   { opacity: 1; transform: translateX(0); }
+          }
+
+          .card-slide-right {
+            animation: slideInFromRight 0.4s ease-in-out;
+          }
+
+          .card-slide-left {
+            animation: slideInFromLeft 0.4s ease-in-out;
+          }
+
+          .dot-nav {
             display: flex;
-            gap: 20px;
-            margin-top: 10px;
+            gap: 12px;
+            margin-top: 4px;
+            margin-bottom: 20px;
+            justify-content: center;
           }
 
-          .nav-btn {
-            background: rgba(0,0,0,0.6);
-            color: #fff;
-            border: 1px solid #fff;
-            padding: 8px 20px;
+          .dot {
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.25);
+            border: none;
             cursor: pointer;
-            border-radius: 6px;
-            font-size: 16px;
+            padding: 0;
+            transition: background 0.3s ease, transform 0.3s ease,
+                        box-shadow 0.3s ease;
           }
 
-          .nav-btn:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
+          .dot.active {
+            background: #0077ff;
+            transform: scale(1.35);
+            box-shadow: 0 0 0 3px rgba(0, 119, 255, 0.30);
+          }
+
+          .dot:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.55);
+            transform: scale(1.1);
           }
         `}
       </style>
@@ -94,14 +113,15 @@ const Projects = () => {
       <div className="about-wrapper">
         <h1 className="about-title">Projects</h1>
 
-        <div className="about-card card-transition" key={activeIndex}>
+        <div
+          className={`about-card ${direction === "right" ? "card-slide-right" : "card-slide-left"}`}
+          key={`${activeIndex}-${direction}`}
+        >
           <ul className="about-list">
             <li>
               <strong>{project.title}</strong>
               {project.duration && <span> ({project.duration})</span>}
-              <br />
             </li>
-
             <ol>
               {project.points.map((point, idx) => (
                 <li key={idx}>{point}</li>
@@ -110,22 +130,19 @@ const Projects = () => {
           </ul>
         </div>
 
-        <div className="nav-buttons">
-          <button
-            className="nav-btn"
-            onClick={handlePrev}
-            disabled={activeIndex === 0}
-          >
-            Previous
-          </button>
-
-          <button
-            className="nav-btn"
-            onClick={handleNext}
-            disabled={activeIndex === total - 1}
-          >
-            Next
-          </button>
+        <div className="dot-nav">
+          {projectsData.map((_, i) => (
+            <button
+              key={i}
+              className={`dot ${i === activeIndex ? "active" : ""}`}
+              onClick={() => {
+                if (i === activeIndex) return;
+                setDirection(i > activeIndex ? "right" : "left");
+                setActiveIndex(i);
+              }}
+              aria-label={`Go to project ${i + 1}`}
+            />
+          ))}
         </div>
       </div>
     </>

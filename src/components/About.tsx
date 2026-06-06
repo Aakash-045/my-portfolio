@@ -1,4 +1,45 @@
+import { useState, useEffect, useRef } from "react";
+
+const stats = [
+  { label: "Years Experience", target: 1, suffix: "+" },
+  { label: "Integrations Built", target: 10, suffix: "+" },
+  { label: "Companies", target: 2, suffix: "" },
+];
+
 const AboutSection = () => {
+  const [counts, setCounts] = useState(stats.map(() => 0));
+  const cardRef = useRef<HTMLDivElement>(null);
+  const hasAnimated = useRef(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasAnimated.current) {
+          hasAnimated.current = true;
+          stats.forEach((stat, i) => {
+            const duration = 1500;
+            const start = performance.now();
+            const tick = (now: number) => {
+              const elapsed = now - start;
+              const progress = Math.min(elapsed / duration, 1);
+              const eased = 1 - (1 - progress) * (1 - progress);
+              setCounts((prev) => {
+                const next = [...prev];
+                next[i] = Math.round(eased * stat.target);
+                return next;
+              });
+              if (progress < 1) requestAnimationFrame(tick);
+            };
+            requestAnimationFrame(tick);
+          });
+        }
+      },
+      { threshold: 0.3 }
+    );
+    if (cardRef.current) observer.observe(cardRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <>
       <style>
@@ -23,6 +64,34 @@ const AboutSection = () => {
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
           }
 
+          .stats-row {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+          }
+
+          .stat-item {
+            text-align: center;
+          }
+
+          .stat-number {
+            font-size: 42px;
+            font-weight: 700;
+            color: #0077ff;
+            line-height: 1;
+            font-variant-numeric: tabular-nums;
+          }
+
+          .stat-label {
+            font-size: 12px;
+            color: #b3d4ff;
+            margin-top: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+          }
+
           .about-title {
             color: #ffffff;
             text-align: center;
@@ -41,12 +110,13 @@ const AboutSection = () => {
             margin-bottom: 12px;
             position: relative;
             padding-left: 10px;
-            transition: color 0.3s ease;
+            transition: color 0.3s ease, padding-left 0.3s ease;
           }
 
           .about-list li:hover {
             color: #a5b4fc;
-            cursor: pointer;
+            cursor: default;
+            padding-left: 16px;
           }
 
           @media (max-width: 768px) {
@@ -57,12 +127,27 @@ const AboutSection = () => {
             .about-title {
               font-size: 28px;
             }
+
+            .stat-number {
+              font-size: 32px;
+            }
           }
         `}
       </style>
 
       <div className="about-wrapper">
-        <div className="about-card">
+        <div className="about-card" ref={cardRef}>
+          <div className="stats-row">
+            {stats.map((stat, i) => (
+              <div className="stat-item" key={stat.label}>
+                <div className="stat-number">
+                  {counts[i]}{stat.suffix}
+                </div>
+                <div className="stat-label">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+
           <h1 className="about-title">About Me</h1>
 
           <ul className="about-list">
