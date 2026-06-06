@@ -4,21 +4,21 @@ import { projectsData } from "../constant";
 const Projects = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [direction, setDirection] = useState<"left" | "right">("right");
-  const total = projectsData.length;
+  // const total = projectsData.length;
 
-  const handleNext = () => {
-    if (activeIndex < total - 1) {
-      setDirection("right");
-      setActiveIndex((prev) => prev + 1);
-    }
-  };
+  // const handleNext = () => {
+  //   if (activeIndex < total - 1) {
+  //     setDirection("right");
+  //     setActiveIndex((prev) => prev + 1);
+  //   }
+  // };
 
-  const handlePrev = () => {
-    if (activeIndex > 0) {
-      setDirection("left");
-      setActiveIndex((prev) => prev - 1);
-    }
-  };
+  // const handlePrev = () => {
+  //   if (activeIndex > 0) {
+  //     setDirection("left");
+  //     setActiveIndex((prev) => prev - 1);
+  //   }
+  // };
 
   const project = projectsData[activeIndex];
 
