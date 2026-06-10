@@ -15,9 +15,17 @@ const HomepageSection = (props: any) => {
   const { activeSection } = props;
   console.log(activeSection);
 
-  const frontendSkills = ["React", "HTML", "CSS", "JavaScript"];
-  const backendSkills = ["Node", "Express", "MongoDB"];
-  const otherSkills = ["Integration", "OAuth2", "Authentication", "SDK"];
+  const frontendSkills = ["React.js", "HTML", "CSS", "JavaScript"];
+  const backendSkills = ["Node.js", "Express", "SQL (Intermediate)"];
+  const otherSkills = [
+    "Integration",
+    "OAuth2.0",
+    "MCP",
+    "LLM",
+    "Webhooks",
+    "Git",
+    "API",
+  ];
 
   // ── Typewriter state ──
   const [displayedText, setDisplayedText] = useState("");
